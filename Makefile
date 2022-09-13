@@ -1,15 +1,15 @@
-APP_NAME = Aseries-App
+APP_NAME = Tout-App
 DOCKER_COMPOSE = docker-compose
 GIT = /usr/bin/git
-REPOSITORY = /data/Aseries
+REPOSITORY = /data/Tout
 TRAEFIK = $(REPOSITORY)/sTraefik
 REDIS = $(REPOSITORY)/sRedis
-MEILISEARCH = $(REPOSITORY)/sMeilisearch
+ELASTICSEARCH = $(REPOSITORY)/sElastic
 
 .BUILD_GOAL := all
 
 .PHONY: install
-install: gateway redis meilisearch run
+install: gateway redis elasticsearch run
 
 .PHONY: all
 all: clean run
@@ -26,8 +26,8 @@ gateway:
 redis:
 		@cd $(REDIS) && $(DOCKER_COMPOSE) up -d
 
-meilisearch:
-		@cd $(MEILISEARCH) && $(DOCKER_COMPOSE) up -d
+elasticsearch:
+		@cd $(ELASTICSEARCH) && $(DOCKER_COMPOSE) up -d
 
 run:
 		@cd $(REPOSITORY) && $(GIT) fetch && $(GIT) reset --hard origin/develop
