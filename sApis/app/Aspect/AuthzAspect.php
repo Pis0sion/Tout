@@ -18,7 +18,6 @@ use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
-use Hyperf\Di\Exception\Exception;
 use HyperfExt\Auth\Contracts\AuthenticatableInterface;
 use HyperfExt\Jwt\Exceptions\TokenExpiredException;
 use Psr\Http\Message\ResponseInterface;
