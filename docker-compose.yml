@@ -10,6 +10,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./sApis:/data/
+    ports:
+      - 8080:9501
     command:
       - /usr/bin/php
       - /data/bin/hyperf.php
