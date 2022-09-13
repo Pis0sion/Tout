@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:  
+  sApis:
+    image: hyperf/hyperf:8.1-alpine-v3.16-swoole
+    container_name: sApis
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./sApis:/data/
+    command:
+      - /usr/bin/php
+      - /data/bin/hyperf.php
+      - start
+    networks:
+      proxy:
+        ipv4_address: 172.18.0.10
+
+networks:
+  proxy:
+    external: true
