@@ -21,6 +21,7 @@
         "php": ">=7.3",
         "hyperf/di": "2.2.*",
         "hyperf/framework": "2.2.*",
+        "hyperf/task": "^2.2",
         "intervention/image": "^2.7"
     },
     "require-dev": {
