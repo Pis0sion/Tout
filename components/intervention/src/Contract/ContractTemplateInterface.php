@@ -12,4 +12,5 @@ interface ContractTemplateInterface
      * @return mixed
      */
     public function renderPageTemplate();
+
 }

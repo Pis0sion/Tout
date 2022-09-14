@@ -2,26 +2,28 @@
 
 namespace Pis0sion\Intervention;
 
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\ContractTemplateInterface;
-use \Intervention\Image\Image as InterventionImage;
 
 /**
  * \Pis0sion\Intervention\ContractPageTemplate
  */
 class ContractPageTemplate implements ContractTemplateInterface
 {
+
     /**
      * @var \Intervention\Image\Image
      */
-    protected InterventionImage $imageEntity;
+    protected Image $imageEntity;
 
     /**
      * @param string $templateUrl
      * @param array $renderParameters
      */
-    public function __construct(public string $templateUrl = "", public array $renderParameters = [])
+    public function __construct(protected string $templateUrl, protected array $renderParameters)
     {
+        $this->imageEntity = make(ImageManager::class)->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
     }
 
     /**
@@ -62,14 +64,52 @@ class ContractPageTemplate implements ContractTemplateInterface
      */
     public function renderPageTemplate(): void
     {
-        $this->imageEntity = Image::make($this->templateUrl);
+        array_map($this->multiRender2PageTemplate(), $this->renderParameters);
+        $fileName = md5(microtime(true) . uniqid()) . '.jpg';
+        $this->imageEntity->save(BASE_PATH . "/runtime/" . $fileName);
+    }
 
-        foreach ($this->renderParameters as $renderParameter) {
-            $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], function ($font) {
-                $font->file((BASE_PATH . '/fonts/simhei.ttf'));
-            });
-        }
+    /**
+     * multiRender2PageTemplate
+     * @return \Closure
+     */
+    protected function multiRender2PageTemplate()
+    {
+        return fn($renderParameter) => match ($renderParameter["type"]) {
+            MimeType::TEXT_TYPE => $this->inputText2PageTemplate($renderParameter),
+            MimeType::IMAGE_TYPE => $this->insertImageResource2PageTemplate($renderParameter),
+            default => throw new \RuntimeException(),
+        };
+    }
 
-        $this->imageEntity->save(BASE_PATH . '/runtime/result.jpg')->destroy();
+    /**
+     * obtainResourcesFromRemoteURL
+     * @param string $remoteUrl
+     * @return false|string
+     */
+    protected function obtainResourcesFromRemoteURL(string $remoteUrl)
+    {
+        $contextOptions = ["ssl" => ["verify_peer" => false, "verify_peer_name" => false,]];
+        return file_get_contents($remoteUrl, false, stream_context_create($contextOptions));
+    }
+
+    /**
+     * inputText2PageTemplate
+     * @param array $renderParameter
+     */
+    protected function inputText2PageTemplate(array $renderParameter)
+    {
+        $fontClosure = fn($font) => $font->file((BASE_PATH . '/fonts/simhei.ttf'))->size(40)->color('#000000');
+        return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $fontClosure);
+    }
+
+    /**
+     * insertImageResource2PageTemplate
+     * @param array $renderParameter
+     */
+    protected function insertImageResource2PageTemplate(array $renderParameter)
+    {
+        $insertResource = $this->obtainResourcesFromRemoteURL($renderParameter["content"]);
+        return $this->imageEntity->insert($insertResource, 'top-left', $renderParameter['width'], $renderParameter['height']);
     }
 }
