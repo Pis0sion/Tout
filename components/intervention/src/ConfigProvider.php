@@ -5,10 +5,11 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
+ * @document https://doc.hyperf.io
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 class ConfigProvider
@@ -17,6 +18,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
+                InterventionFactoryInterface::class => InterventionFactory::class,
             ],
             'commands' => [
             ],
