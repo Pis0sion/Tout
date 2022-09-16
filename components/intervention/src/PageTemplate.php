@@ -4,14 +4,14 @@ namespace Pis0sion\Intervention;
 
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
-use Pis0sion\Intervention\Contract\ContractTemplateInterface;
+use Pis0sion\Intervention\Contract\PageTemplateInterface;
+use Pis0sion\Intervention\Exception\InvalidPageUriException;
 
 /**
- * \Pis0sion\Intervention\ContractPageTemplate
+ * \Pis0sion\Intervention\PageTemplate
  */
-class ContractPageTemplate implements ContractTemplateInterface
+class PageTemplate implements PageTemplateInterface
 {
-
     /**
      * @var \Intervention\Image\Image
      */
@@ -21,9 +21,19 @@ class ContractPageTemplate implements ContractTemplateInterface
      * @param string $templateUrl
      * @param array $renderParameters
      */
-    public function __construct(protected string $templateUrl, protected array $renderParameters)
+    public function __construct(protected string $templateUrl, protected array $renderParameters = [])
     {
-        $this->imageEntity = make(ImageManager::class)->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
+        $this->setImageEntity(
+            (make(ImageManager::class))->make($this->obtainResourcesFromRemoteURL($this->templateUrl))
+        );
+    }
+
+    /**
+     * @param \Intervention\Image\Image $imageEntity
+     */
+    public function setImageEntity(Image $imageEntity): void
+    {
+        $this->imageEntity = $imageEntity;
     }
 
     /**
@@ -59,30 +69,6 @@ class ContractPageTemplate implements ContractTemplateInterface
     }
 
     /**
-     * renderPageTemplate
-     * @return mixed|void
-     */
-    public function renderPageTemplate(): void
-    {
-        array_map($this->multiRender2PageTemplate(), $this->renderParameters);
-        $fileName = md5(microtime(true) . uniqid()) . '.jpg';
-        $this->imageEntity->save(BASE_PATH . "/runtime/" . $fileName);
-    }
-
-    /**
-     * multiRender2PageTemplate
-     * @return \Closure
-     */
-    protected function multiRender2PageTemplate()
-    {
-        return fn($renderParameter) => match ($renderParameter["type"]) {
-            MimeType::TEXT_TYPE => $this->inputText2PageTemplate($renderParameter),
-            MimeType::IMAGE_TYPE => $this->insertImageResource2PageTemplate($renderParameter),
-            default => throw new \RuntimeException(),
-        };
-    }
-
-    /**
      * obtainResourcesFromRemoteURL
      * @param string $remoteUrl
      * @return false|string
@@ -90,14 +76,19 @@ class ContractPageTemplate implements ContractTemplateInterface
     protected function obtainResourcesFromRemoteURL(string $remoteUrl)
     {
         $contextOptions = ["ssl" => ["verify_peer" => false, "verify_peer_name" => false,]];
-        return file_get_contents($remoteUrl, false, stream_context_create($contextOptions));
+
+        if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
+            throw new InvalidPageUriException("获取远程资源失败");
+        }
+
+        return $fResource;
     }
 
     /**
      * inputText2PageTemplate
      * @param array $renderParameter
      */
-    protected function inputText2PageTemplate(array $renderParameter)
+    public function inputText2PageTemplate(array $renderParameter)
     {
         $fontClosure = fn($font) => $font->file((BASE_PATH . '/fonts/simhei.ttf'))->size(40)->color('#000000');
         return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $fontClosure);
@@ -107,9 +98,18 @@ class ContractPageTemplate implements ContractTemplateInterface
      * insertImageResource2PageTemplate
      * @param array $renderParameter
      */
-    protected function insertImageResource2PageTemplate(array $renderParameter)
+    public function insertImageResource2PageTemplate(array $renderParameter)
     {
         $insertResource = $this->obtainResourcesFromRemoteURL($renderParameter["content"]);
         return $this->imageEntity->insert($insertResource, 'top-left', $renderParameter['width'], $renderParameter['height']);
     }
+
+    /**
+     * save2PageTemplate
+     */
+    public function save2Page()
+    {
+        $this->imageEntity->save(BASE_PATH . '/public/images/test.png');
+    }
+
 }

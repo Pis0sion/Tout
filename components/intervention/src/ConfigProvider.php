@@ -12,13 +12,15 @@ declare(strict_types=1);
 
 namespace Pis0sion\Intervention;
 
+use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
+
 class ConfigProvider
 {
     public function __invoke(): array
     {
         return [
             'dependencies' => [
-                InterventionFactoryInterface::class => InterventionFactory::class,
+                ContractGeneratorFactoryInterface::class => ContractGenerator::class,
             ],
             'commands' => [
             ],
