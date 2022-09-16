@@ -2,6 +2,7 @@
 
 namespace Pis0sion\Intervention;
 
+use Co\System;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
@@ -105,11 +106,15 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
-     * save2PageTemplate
+     * save2Page
+     * @return string
      */
     public function save2Page()
     {
-        $this->imageEntity->save(BASE_PATH . '/public/images/test.png');
+        $fileName = md5(uniqid() . microtime(true)) . ".png";
+        //$this->imageEntity->save(BASE_PATH . '/runtime/' . $fileName);
+        \Swoole\Coroutine\System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
+        return $fileName;
     }
 
 }

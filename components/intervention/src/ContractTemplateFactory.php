@@ -17,6 +17,14 @@ class ContractTemplateFactory
     protected Collection $pageTemplates;
 
     /**
+     * __construct
+     */
+    public function __construct()
+    {
+        $this->pageTemplates = Collection::make();
+    }
+
+    /**
      * @return \Hyperf\Utils\Collection
      */
     public function getPageTemplates(): Collection
@@ -39,14 +47,14 @@ class ContractTemplateFactory
      */
     public function renderContractTemplate()
     {
-        $callback = [];
-
-        $this->pageTemplates->each(function (PageTemplateInterface $pageTemplate, int $page) use (&$callback) {
-            $this->render2PageTemplate($pageTemplate);
-            $callback[$page] = fn() => $pageTemplate->save2Page();
+        $handlerParallelFunc = $this->pageTemplates->map(function (PageTemplateInterface $pageTemplate) {
+            return function () use ($pageTemplate) {
+                $this->render2PageTemplate($pageTemplate);
+                return $pageTemplate->save2Page();
+            };
         });
 
-        return parallel($callback);
+        return parallel($handlerParallelFunc::unwrap($handlerParallelFunc));
     }
 
     /**

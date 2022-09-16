@@ -32,10 +32,10 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
         $pageTemplates = [];
 
         foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
-            $pageTemplates[$page] = new PageTemplate($pageTemplateParameter["templateUrl"], $pageTemplateParameter);
+            $pageTemplates[$page] = fn() => new PageTemplate($pageTemplateParameter["templateUrl"], $pageTemplateParameter["content"]);
         }
 
-        return $pageTemplates;
+        return parallel($pageTemplates);
     }
 
     /**
