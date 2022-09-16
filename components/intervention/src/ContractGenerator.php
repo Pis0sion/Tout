@@ -3,6 +3,7 @@
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
+use Pis0sion\Intervention\Exception\InvalidKeyValueException;
 
 /**
  * \Pis0sion\Intervention\ContractGenerator
@@ -32,6 +33,12 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
         $pageTemplates = [];
 
         foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
+
+            if (!array_key_exists("templateUrl", $pageTemplateParameter) ||
+                !array_key_exists("content", $pageTemplateParameter)) {
+                throw new InvalidKeyValueException("无效的键值对");
+            }
+
             $pageTemplates[$page] = fn() => new PageTemplate($pageTemplateParameter["templateUrl"], $pageTemplateParameter["content"]);
         }
 

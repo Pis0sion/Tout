@@ -2,7 +2,6 @@
 
 namespace Pis0sion\Intervention;
 
-use Co\System;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
