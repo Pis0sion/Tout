@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
@@ -30,6 +31,14 @@ class ConfigProvider
                     'paths' => [
                         __DIR__,
                     ],
+                ],
+            ],
+            'publish' => [
+                [
+                    'id' => 'font',
+                    'description' => 'The config for Font.',
+                    'source' => __DIR__ . '/../publish/simhei.ttf',
+                    'destination' => BASE_PATH . '/config/autoload/simhei.ttf',
                 ],
             ],
         ];

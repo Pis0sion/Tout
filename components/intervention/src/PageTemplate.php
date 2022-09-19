@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 use Intervention\Image\Image;
@@ -76,7 +77,7 @@ class PageTemplate implements PageTemplateInterface
      */
     public function inputText2PageTemplate(array $renderParameter)
     {
-        $fontClosure = fn ($font) => $font->file(BASE_PATH . '/fonts/simhei.ttf')->size(40)->color('#000000');
+        $fontClosure = fn($font) => $font->file(BASE_PATH . '/config/autoload/simhei.ttf')->size(40)->color('#000000');
         return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $fontClosure);
     }
 
@@ -110,7 +111,7 @@ class PageTemplate implements PageTemplateInterface
     {
         $contextOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]];
 
-        if (! $fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
+        if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
             throw new InvalidPageUriException('获取远程资源失败');
         }
 
