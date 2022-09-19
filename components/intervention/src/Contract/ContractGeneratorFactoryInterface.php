@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace Pis0sion\Intervention\Contract;
 
-use Pis0sion\Intervention\ContractGenerator;
-
 /**
- * \Pis0sion\Intervention\ContractGeneratorFactoryInterface
+ * \Pis0sion\Intervention\ContractGeneratorFactoryInterface.
  * @method
  */
 interface ContractGeneratorFactoryInterface
 {
     /**
-     * generatorContract
+     * generatorContract.
      * @param array $pageTemplates
-     * @return array
      */
     public function generatorContract(array $pageTemplateParameters): array;
 }

@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace Pis0sion\Intervention;
 
 use Intervention\Image\Image;
@@ -9,7 +18,7 @@ use Pis0sion\Intervention\Exception\InvalidPageUriException;
 use Swoole\Coroutine\System;
 
 /**
- * \Pis0sion\Intervention\PageTemplate
+ * \Pis0sion\Intervention\PageTemplate.
  */
 class PageTemplate implements PageTemplateInterface
 {
@@ -19,9 +28,7 @@ class PageTemplate implements PageTemplateInterface
     protected Image $imageEntity;
 
     /**
-     * __invoke
-     * @param string $templateUrl
-     * @param array $renderParameters
+     * __invoke.
      */
     public function __construct(protected string $templateUrl, protected array $renderParameters = [])
     {
@@ -29,6 +36,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
+     * getTemplateUrl
      * @return string
      */
     public function getTemplateUrl(): string
@@ -37,6 +45,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
+     * setTemplateUrl
      * @param string $templateUrl
      */
     public function setTemplateUrl(string $templateUrl): void
@@ -45,6 +54,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
+     * getRenderParameters
      * @return array
      */
     public function getRenderParameters(): array
@@ -53,6 +63,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
+     * setRenderParameters
      * @param array $renderParameters
      */
     public function setRenderParameters(array $renderParameters): void
@@ -61,52 +72,48 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
-     * obtainResourcesFromRemoteURL
-     * @param string $remoteUrl
-     * @return false|string
-     */
-    protected function obtainResourcesFromRemoteURL(string $remoteUrl)
-    {
-        $contextOptions = ["ssl" => ["verify_peer" => false, "verify_peer_name" => false,]];
-
-        if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
-            throw new InvalidPageUriException("获取远程资源失败");
-        }
-
-        return $fResource;
-    }
-
-    /**
-     * inputText2PageTemplate
-     * @param array $renderParameter
+     * inputText2PageTemplate.
      */
     public function inputText2PageTemplate(array $renderParameter)
     {
-        $fontClosure = fn($font) => $font->file((BASE_PATH . '/fonts/simhei.ttf'))->size(40)->color('#000000');
+        $fontClosure = fn ($font) => $font->file(BASE_PATH . '/fonts/simhei.ttf')->size(40)->color('#000000');
         return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $fontClosure);
     }
 
     /**
-     * insertImageResource2PageTemplate
-     * @param array $renderParameter
+     * insertImageResource2PageTemplate.
      */
     public function insertImageResource2PageTemplate(array $renderParameter)
     {
-        $insertResource = $this->obtainResourcesFromRemoteURL($renderParameter["content"]);
+        $insertResource = $this->obtainResourcesFromRemoteURL($renderParameter['content']);
         return $this->imageEntity->insert($insertResource, 'top-left', $renderParameter['width'], $renderParameter['height']);
     }
 
     /**
      * save2Page
-     * override this method to implement different save rules
+     * override this method to implement different save rules.
      * @return string
      */
     public function save2Page()
     {
-        $fileName = md5(uniqid() . microtime(true)) . ".png";
+        $fileName = md5(uniqid() . microtime(true)) . '.png';
         // @notice code that blocks using io is prohibited
         System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
         return $fileName;
     }
 
+    /**
+     * obtainResourcesFromRemoteURL.
+     * @return false|string
+     */
+    protected function obtainResourcesFromRemoteURL(string $remoteUrl)
+    {
+        $contextOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]];
+
+        if (! $fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
+            throw new InvalidPageUriException('获取远程资源失败');
+        }
+
+        return $fResource;
+    }
 }

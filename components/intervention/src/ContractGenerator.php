@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
@@ -7,7 +16,7 @@ use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidKeyValueException;
 
 /**
- * \Pis0sion\Intervention\ContractGenerator
+ * \Pis0sion\Intervention\ContractGenerator.
  */
 class ContractGenerator implements ContractGeneratorFactoryInterface
 {
@@ -25,31 +34,8 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     }
 
     /**
-     * build2PageTemplate
-     * @param array $pageTemplateParameters
-     * @return array
-     */
-    protected function build2PageTemplate(array $pageTemplateParameters)
-    {
-        $pageTemplates = [];
-
-        foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
-
-            if (!array_key_exists("templateUrl", $pageTemplateParameter) ||
-                !array_key_exists("renderParameters", $pageTemplateParameter)) {
-                throw new InvalidKeyValueException("无效的键值对");
-            }
-
-            $pageTemplates[$page] = fn() => make(PageTemplateInterface::class, $pageTemplateParameter);
-        }
-
-        return parallel($pageTemplates);
-    }
-
-    /**
-     * generatorContract
+     * generatorContract.
      * @param array $pageTemplates
-     * @return array
      */
     public function generatorContract(array $pageTemplateParameters): array
     {
@@ -62,4 +48,23 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
         return $this->contractTemplateFactory->renderContractTemplate();
     }
 
+    /**
+     * build2PageTemplate.
+     * @return array
+     */
+    protected function build2PageTemplate(array $pageTemplateParameters)
+    {
+        $pageTemplates = [];
+
+        foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
+            if (! array_key_exists('templateUrl', $pageTemplateParameter)
+                || ! array_key_exists('renderParameters', $pageTemplateParameter)) {
+                throw new InvalidKeyValueException('无效的键值对');
+            }
+
+            $pageTemplates[$page] = fn () => make(PageTemplateInterface::class, $pageTemplateParameter);
+        }
+
+        return parallel($pageTemplates);
+    }
 }

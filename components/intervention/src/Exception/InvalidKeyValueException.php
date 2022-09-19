@@ -1,9 +1,18 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace Pis0sion\Intervention\Exception;
 
 /**
- * \Pis0sion\Intervention\Exception\InvalidKeyValueException
+ * \Pis0sion\Intervention\Exception\InvalidKeyValueException.
  */
 class InvalidKeyValueException extends \RuntimeException
 {
