@@ -79,7 +79,7 @@ class ContractTemplateFactory
         return fn($renderParameter) => match ($renderParameter['type']) {
             MimeType::TEXT_TYPE => $pageTemplate->inputText2PageTemplate($renderParameter),
             MimeType::IMAGE_TYPE => $pageTemplate->insertImageResource2PageTemplate($renderParameter),
-            default => throw new InvalidMIMETypeException('无效的渲染类型'),
+            default => throw new InvalidMIMETypeException('invalid render type'),
         };
     }
 }

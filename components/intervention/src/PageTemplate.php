@@ -97,7 +97,7 @@ class PageTemplate implements PageTemplateInterface
      */
     public function save2Page()
     {
-        $fileName = md5(uniqid() . microtime(true)) . '.png';
+        $fileName = md5(uniqid() . microtime(true)) . '.jpg';
         // @notice code that blocks using io is prohibited
         System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
         return $fileName;
@@ -112,9 +112,10 @@ class PageTemplate implements PageTemplateInterface
         $contextOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]];
 
         if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
-            throw new InvalidPageUriException('获取远程资源失败');
+            throw new InvalidPageUriException('failed to get remote resource');
         }
 
         return $fResource;
     }
+
 }
