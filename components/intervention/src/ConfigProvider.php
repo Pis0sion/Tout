@@ -21,7 +21,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
-                ContractGeneratorFactoryInterface::class => ContractFactory::class,
+                ContractGeneratorFactoryInterface::class => ContractGenerator::class,
                 PageTemplateInterface::class => PageTemplate::class,
             ],
             'commands' => [
