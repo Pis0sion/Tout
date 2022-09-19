@@ -6,6 +6,7 @@ use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidPageUriException;
+use Swoole\Coroutine\System;
 
 /**
  * \Pis0sion\Intervention\PageTemplate
@@ -97,13 +98,14 @@ class PageTemplate implements PageTemplateInterface
 
     /**
      * save2Page
+     * override this method to implement different save rules
      * @return string
      */
     public function save2Page()
     {
         $fileName = md5(uniqid() . microtime(true)) . ".png";
-        //$this->imageEntity->save(BASE_PATH . '/runtime/' . $fileName);
-        \Swoole\Coroutine\System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
+        // @notice code that blocks using io is prohibited
+        System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
         return $fileName;
     }
 

@@ -12,20 +12,25 @@ use Pis0sion\Intervention\Exception\InvalidMIMETypeException;
  */
 class ContractTemplateFactory
 {
+
     /**
-     * @return \Hyperf\Utils\Collection
+     * getPageTemplates
+     * @return \Hyperf\Utils\Collection|null
      */
-    public function getPageTemplates(): Collection
+    public function getPageTemplates(): Collection|null
     {
         return Context::get("pageTemplates");
     }
 
     /**
+     * setPageTemplates
      * @param \Hyperf\Utils\Collection $pageTemplates
+     * @return \Hyperf\Utils\Collection
      */
     public function setPageTemplates(Collection $pageTemplates)
     {
-        return Context::set("pageTemplates", $pageTemplates);
+        Context::set("pageTemplates", $pageTemplates);
+        return $pageTemplates;
     }
 
     /**
@@ -35,7 +40,8 @@ class ContractTemplateFactory
      */
     public function addPageTemplates(int $page, PageTemplateInterface $pageTemplate): void
     {
-        $this->getPageTemplates()->put($page, $pageTemplate);
+        $pageTemplateEntity = $this->getPageTemplates() ?? $this->setPageTemplates(new Collection());
+        $pageTemplateEntity->put($page, $pageTemplate);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Pis0sion\Intervention;
 
-use Hyperf\Utils\Collection;
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidKeyValueException;
@@ -16,7 +15,7 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
      * @var \Pis0sion\Intervention\ContractTemplateFactory
      */
     protected ContractTemplateFactory $contractTemplateFactory;
-    
+
     /**
      * @param \Pis0sion\Intervention\ContractTemplateFactory $contractTemplateFactory
      */
@@ -37,7 +36,7 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
         foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
 
             if (!array_key_exists("templateUrl", $pageTemplateParameter) ||
-                !array_key_exists("content", $pageTemplateParameter)) {
+                !array_key_exists("renderParameters", $pageTemplateParameter)) {
                 throw new InvalidKeyValueException("无效的键值对");
             }
 
@@ -55,7 +54,6 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     public function generatorContract(array $pageTemplateParameters): array
     {
         $pageTemplates = $this->build2PageTemplate($pageTemplateParameters);
-        $this->contractTemplateFactory->setPageTemplates((new Collection()));
 
         foreach ($pageTemplates as $page => $pageTemplate) {
             $this->contractTemplateFactory->addPageTemplates($page, $pageTemplate);
