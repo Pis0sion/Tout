@@ -21,7 +21,7 @@ class ContractTemplateFactory
      */
     public function __construct()
     {
-        $this->pageTemplates = Collection::make();
+        $this->pageTemplates = new Collection();
     }
 
     /**
@@ -33,7 +33,7 @@ class ContractTemplateFactory
     }
 
     /**
-     * setPageTemplates
+     * addPageTemplates
      * @param int $page
      * @param \Pis0sion\Intervention\Contract\PageTemplateInterface $pageTemplate
      */
@@ -44,14 +44,13 @@ class ContractTemplateFactory
 
     /**
      * renderContractTemplate
+     * @return array
      */
-    public function renderContractTemplate()
+    public function renderContractTemplate(): array
     {
-        $handlerParallelFunc = $this->pageTemplates->map(function (PageTemplateInterface $pageTemplate) {
-            return function () use ($pageTemplate) {
-                $this->render2PageTemplate($pageTemplate);
-                return $pageTemplate->save2Page();
-            };
+        $handlerParallelFunc = $this->pageTemplates->map(fn(PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
+            $this->render2PageTemplate($pageTemplate);
+            return $pageTemplate->save2Page();
         });
 
         return parallel($handlerParallelFunc::unwrap($handlerParallelFunc));
@@ -62,7 +61,7 @@ class ContractTemplateFactory
      * @param \Pis0sion\Intervention\Contract\PageTemplateInterface $pageTemplate
      * @return array
      */
-    protected function render2PageTemplate(PageTemplateInterface $pageTemplate)
+    protected function render2PageTemplate(PageTemplateInterface $pageTemplate): array
     {
         return array_map($this->multiRenderPerPageTemplate($pageTemplate), $pageTemplate->getRenderParameters());
     }

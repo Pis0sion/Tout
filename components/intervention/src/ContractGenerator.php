@@ -11,16 +11,12 @@ use Pis0sion\Intervention\Exception\InvalidKeyValueException;
 class ContractGenerator implements ContractGeneratorFactoryInterface
 {
     /**
-     * @var \Pis0sion\Intervention\ContractTemplateFactory
+     * contractTemplateFactory
+     * @return \Pis0sion\Intervention\ContractTemplateFactory
      */
-    protected ContractTemplateFactory $contractTemplateFactory;
-
-    /**
-     * @param \Pis0sion\Intervention\ContractTemplateFactory $contractTemplateFactory
-     */
-    public function __construct(ContractTemplateFactory $contractTemplateFactory)
+    protected function contractTemplateFactory()
     {
-        $this->contractTemplateFactory = $contractTemplateFactory;
+        return new ContractTemplateFactory();
     }
 
     /**
@@ -53,11 +49,12 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     public function generatorContract(array $pageTemplateParameters): array
     {
         $pageTemplates = $this->build2PageTemplate($pageTemplateParameters);
+        $contractTemplateFactory = $this->contractTemplateFactory();
 
         foreach ($pageTemplates as $page => $pageTemplate) {
-            $this->contractTemplateFactory->addPageTemplates($page, $pageTemplate);
+            $contractTemplateFactory->addPageTemplates($page, $pageTemplate);
         }
 
-        return $this->contractTemplateFactory->renderContractTemplate();
+        return $contractTemplateFactory->renderContractTemplate();
     }
 }

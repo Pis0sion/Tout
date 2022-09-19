@@ -2,7 +2,6 @@
 
 namespace Pis0sion\Intervention\Contract;
 
-use Pis0sion\Intervention\PageTemplate;
 
 /**
  * \Pis0sion\Intervention\Contract\PageTemplateInterface

@@ -20,6 +20,7 @@
     "require": {
         "php": ">=7.3",
         "hyperf/di": "2.2.*",
+        "hyperf/flysystem-oss": "^1.2",
         "hyperf/framework": "2.2.*",
         "intervention/image": "^2.7"
     },
