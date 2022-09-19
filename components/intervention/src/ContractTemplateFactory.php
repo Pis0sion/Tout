@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 use Hyperf\Context\Context;
@@ -44,8 +45,8 @@ class ContractTemplateFactory
      */
     public function addPageTemplates(int $page, PageTemplateInterface $pageTemplate): void
     {
-        $pageTemplateEntity = $this->getPageTemplates() ?? $this->setPageTemplates(new Collection());
-        $pageTemplateEntity->put($page, $pageTemplate);
+        $pageTemplateVector = $this->getPageTemplates() ?? $this->setPageTemplates(new Collection());
+        $pageTemplateVector->put($page, $pageTemplate);
     }
 
     /**
@@ -53,7 +54,7 @@ class ContractTemplateFactory
      */
     public function renderContractTemplate(): array
     {
-        $handlerParallelFunc = $this->getPageTemplates()->map(fn (PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
+        $handlerParallelFunc = $this->getPageTemplates()->map(fn(PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
             $this->render2PageTemplate($pageTemplate);
             return $pageTemplate->save2Page();
         });
@@ -75,7 +76,7 @@ class ContractTemplateFactory
      */
     protected function multiRenderPerPageTemplate(PageTemplateInterface $pageTemplate)
     {
-        return fn ($renderParameter) => match ($renderParameter['type']) {
+        return fn($renderParameter) => match ($renderParameter['type']) {
             MimeType::TEXT_TYPE => $pageTemplate->inputText2PageTemplate($renderParameter),
             MimeType::IMAGE_TYPE => $pageTemplate->insertImageResource2PageTemplate($renderParameter),
             default => throw new InvalidMIMETypeException('无效的渲染类型'),
