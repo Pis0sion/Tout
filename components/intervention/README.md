@@ -1,11 +1,12 @@
 # intervention create a contract component
-[]: # Installation
+
+### Installation
 
 ```
 composer require pis0sion/intervention
 ```
 
-[]: # Usage
+### Usage
 
 ```
 {

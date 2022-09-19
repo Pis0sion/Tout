@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Pis0sion\Intervention;
 
+use Hyperf\Utils\Coroutine;
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidKeyValueException;
