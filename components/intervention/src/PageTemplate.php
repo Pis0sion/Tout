@@ -18,22 +18,13 @@ class PageTemplate implements PageTemplateInterface
     protected Image $imageEntity;
 
     /**
+     * __invoke
      * @param string $templateUrl
      * @param array $renderParameters
      */
     public function __construct(protected string $templateUrl, protected array $renderParameters = [])
     {
-        $this->setImageEntity(
-            (make(ImageManager::class))->make($this->obtainResourcesFromRemoteURL($this->templateUrl))
-        );
-    }
-
-    /**
-     * @param \Intervention\Image\Image $imageEntity
-     */
-    public function setImageEntity(Image $imageEntity): void
-    {
-        $this->imageEntity = $imageEntity;
+        $this->imageEntity = make(ImageManager::class)->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
     }
 
     /**

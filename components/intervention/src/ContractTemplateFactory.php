@@ -2,6 +2,7 @@
 
 namespace Pis0sion\Intervention;
 
+use Hyperf\Context\Context;
 use Hyperf\Utils\Collection;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidMIMETypeException;
@@ -12,24 +13,19 @@ use Pis0sion\Intervention\Exception\InvalidMIMETypeException;
 class ContractTemplateFactory
 {
     /**
-     * @var \Hyperf\Utils\Collection $pageTemplates
-     */
-    protected Collection $pageTemplates;
-
-    /**
-     * __construct
-     */
-    public function __construct()
-    {
-        $this->pageTemplates = new Collection();
-    }
-
-    /**
      * @return \Hyperf\Utils\Collection
      */
     public function getPageTemplates(): Collection
     {
-        return $this->pageTemplates;
+        return Context::get("pageTemplates");
+    }
+
+    /**
+     * @param \Hyperf\Utils\Collection $pageTemplates
+     */
+    public function setPageTemplates(Collection $pageTemplates)
+    {
+        return Context::set("pageTemplates", $pageTemplates);
     }
 
     /**
@@ -39,7 +35,7 @@ class ContractTemplateFactory
      */
     public function addPageTemplates(int $page, PageTemplateInterface $pageTemplate): void
     {
-        $this->pageTemplates->put($page, $pageTemplate);
+        $this->getPageTemplates()->put($page, $pageTemplate);
     }
 
     /**
@@ -48,7 +44,7 @@ class ContractTemplateFactory
      */
     public function renderContractTemplate(): array
     {
-        $handlerParallelFunc = $this->pageTemplates->map(fn(PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
+        $handlerParallelFunc = $this->getPageTemplates()->map(fn(PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
             $this->render2PageTemplate($pageTemplate);
             return $pageTemplate->save2Page();
         });

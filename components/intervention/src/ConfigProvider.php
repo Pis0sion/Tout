@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
+use Pis0sion\Intervention\Contract\PageTemplateInterface;
 
 class ConfigProvider
 {
@@ -20,7 +21,8 @@ class ConfigProvider
     {
         return [
             'dependencies' => [
-                ContractGeneratorFactoryInterface::class => ContractGenerator::class,
+                ContractGeneratorFactoryInterface::class => ContractFactory::class,
+                PageTemplateInterface::class => PageTemplate::class,
             ],
             'commands' => [
             ],

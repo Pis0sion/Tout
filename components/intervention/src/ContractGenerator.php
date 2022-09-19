@@ -2,7 +2,9 @@
 
 namespace Pis0sion\Intervention;
 
+use Hyperf\Utils\Collection;
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
+use Pis0sion\Intervention\Contract\PageTemplateInterface;
 use Pis0sion\Intervention\Exception\InvalidKeyValueException;
 
 /**
@@ -11,12 +13,16 @@ use Pis0sion\Intervention\Exception\InvalidKeyValueException;
 class ContractGenerator implements ContractGeneratorFactoryInterface
 {
     /**
-     * contractTemplateFactory
-     * @return \Pis0sion\Intervention\ContractTemplateFactory
+     * @var \Pis0sion\Intervention\ContractTemplateFactory
      */
-    protected function contractTemplateFactory()
+    protected ContractTemplateFactory $contractTemplateFactory;
+    
+    /**
+     * @param \Pis0sion\Intervention\ContractTemplateFactory $contractTemplateFactory
+     */
+    public function __construct(ContractTemplateFactory $contractTemplateFactory)
     {
-        return new ContractTemplateFactory();
+        $this->contractTemplateFactory = $contractTemplateFactory;
     }
 
     /**
@@ -35,7 +41,7 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
                 throw new InvalidKeyValueException("无效的键值对");
             }
 
-            $pageTemplates[$page] = fn() => new PageTemplate($pageTemplateParameter["templateUrl"], $pageTemplateParameter["content"]);
+            $pageTemplates[$page] = fn() => make(PageTemplateInterface::class, $pageTemplateParameter);
         }
 
         return parallel($pageTemplates);
@@ -49,12 +55,13 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     public function generatorContract(array $pageTemplateParameters): array
     {
         $pageTemplates = $this->build2PageTemplate($pageTemplateParameters);
-        $contractTemplateFactory = $this->contractTemplateFactory();
+        $this->contractTemplateFactory->setPageTemplates((new Collection()));
 
         foreach ($pageTemplates as $page => $pageTemplate) {
-            $contractTemplateFactory->addPageTemplates($page, $pageTemplate);
+            $this->contractTemplateFactory->addPageTemplates($page, $pageTemplate);
         }
 
-        return $contractTemplateFactory->renderContractTemplate();
+        return $this->contractTemplateFactory->renderContractTemplate();
     }
+
 }
