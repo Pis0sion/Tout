@@ -5,6 +5,7 @@ namespace App\Controller\V1;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
 
 /**
  * \App\Controller\V1\EntryController
@@ -13,8 +14,9 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 class EntryController
 {
     #[RequestMapping(path: "wechat-launch", methods: "POST")]
-    public function wechatLaunch(RequestInterface $request)
+    public function wechatLaunch(ContractGeneratorFactoryInterface $contractGeneratorFactory, RequestInterface $request)
     {
-        return renderResponse(["method" => __FUNCTION__]);
+        $pageTemplateParameters = $request->input("tmplParameters");
+        return $contractGeneratorFactory->generatorContract($pageTemplateParameters);
     }
 }

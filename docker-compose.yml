@@ -9,13 +9,12 @@ services:
       - no-new-privileges:true
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./sApis:/data/
+      - ./sApis:/data/sApis
+      - ./components:/data/components
     ports:
       - 8080:9501
     command:
-      - /usr/bin/php
-      - /data/bin/hyperf.php
-      - start
+      - top
     networks:
       proxy:
         ipv4_address: 172.18.0.10
