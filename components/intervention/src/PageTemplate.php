@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Pis0sion\Intervention;
 
+use Intervention\Image\Gd\Font;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
@@ -39,8 +40,8 @@ class PageTemplate implements PageTemplateInterface
     public function __construct(protected string $templateUrl, protected array $renderParameters = [])
     {
         $driver = config('intervention.driver', 'gd');
-        $this->imageEntity = make(ImageManager::class, compact("driver"))->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
         $this->fonts = make(Fonts::class);
+        $this->imageEntity = make(ImageManager::class, compact("driver"))->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
     }
 
     /**

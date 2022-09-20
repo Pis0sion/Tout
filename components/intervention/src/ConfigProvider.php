@@ -35,6 +35,12 @@ class ConfigProvider
             ],
             'publish' => [
                 [
+                    'id' => 'intervention',
+                    'description' => 'The config for intervention.',
+                    'source' => __DIR__ . '/../publish/intervention.php',
+                    'destination' => BASE_PATH . '/config/autoload/intervention.php',
+                ],
+                [
                     'id' => 'font',
                     'description' => 'The config for Font.',
                     'source' => __DIR__ . '/../publish/simhei.ttf',
