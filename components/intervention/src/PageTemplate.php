@@ -29,11 +29,18 @@ class PageTemplate implements PageTemplateInterface
     protected Image $imageEntity;
 
     /**
+     * @var \Pis0sion\Intervention\Fonts
+     */
+    protected Fonts $fonts;
+
+    /**
      * __invoke.
      */
     public function __construct(protected string $templateUrl, protected array $renderParameters = [])
     {
-        $this->imageEntity = make(ImageManager::class)->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
+        $driver = config('intervention.driver', 'gd');
+        $this->imageEntity = make(ImageManager::class, compact("driver"))->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
+        $this->fonts = make(Fonts::class);
     }
 
     /**
@@ -77,8 +84,7 @@ class PageTemplate implements PageTemplateInterface
      */
     public function inputText2PageTemplate(array $renderParameter)
     {
-        $fontClosure = fn($font) => $font->file(BASE_PATH . '/config/autoload/simhei.ttf')->size(40)->color('#000000');
-        return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $fontClosure);
+        return $this->imageEntity->text($renderParameter['content'], $renderParameter['width'], $renderParameter['height'], $this->fonts->setFontStyle());
     }
 
     /**
