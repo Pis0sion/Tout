@@ -1,15 +1,23 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Exception\InvalidFontsException;
 
 /**
- * \Pis0sion\Intervention\Fonts
+ * \Pis0sion\Intervention\Fonts.
  */
 class Fonts
 {
-
     /**
      * @var string
      */
@@ -26,6 +34,7 @@ class Fonts
     protected string $fontColor;
 
     /**
+     * getFontUrl
      * @return string
      */
     public function getFontUrl(): string
@@ -34,6 +43,7 @@ class Fonts
     }
 
     /**
+     * setFontUrl
      * @param string $fontUrl
      */
     public function setFontUrl(string $fontUrl): void
@@ -42,6 +52,7 @@ class Fonts
     }
 
     /**
+     * getFontSize
      * @return int
      */
     public function getFontSize(): int
@@ -50,6 +61,7 @@ class Fonts
     }
 
     /**
+     * setFontSize
      * @param int $fontSize
      */
     public function setFontSize(int $fontSize): void
@@ -58,6 +70,7 @@ class Fonts
     }
 
     /**
+     * getFontColor
      * @return string
      */
     public function getFontColor(): string
@@ -66,6 +79,7 @@ class Fonts
     }
 
     /**
+     * setFontColor
      * @param string $fontColor
      */
     public function setFontColor(string $fontColor): void
@@ -74,7 +88,7 @@ class Fonts
     }
 
     /**
-     * setFontStyle
+     * setFontStyle.
      * @return \Closure
      */
     public function setFontStyle()
@@ -83,9 +97,9 @@ class Fonts
         $this->fontSize = config('intervention.fonts.fontSize', 40);
         $this->fontColor = config('intervention.fonts.fontColor', '#000000');
         try {
-            return fn($font) => $font->file($this->fontUrl)->size($this->fontSize)->color($this->fontColor);
+            return fn ($font) => $font->file($this->fontUrl)->size($this->fontSize)->color($this->fontColor);
         } catch (\Throwable) {
-            throw new InvalidFontsException("The font file does not exist");
+            throw new InvalidFontsException('The font file does not exist');
         }
     }
 }

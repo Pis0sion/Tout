@@ -9,10 +9,8 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace Pis0sion\Intervention;
 
-use Intervention\Image\Gd\Font;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Pis0sion\Intervention\Contract\PageTemplateInterface;
@@ -24,9 +22,6 @@ use Swoole\Coroutine\System;
  */
 class PageTemplate implements PageTemplateInterface
 {
-    /**
-     * @var \Intervention\Image\Image
-     */
     protected Image $imageEntity;
 
     /**
@@ -41,12 +36,11 @@ class PageTemplate implements PageTemplateInterface
     {
         $driver = config('intervention.driver', 'gd');
         $this->fonts = make(Fonts::class);
-        $this->imageEntity = make(ImageManager::class, compact("driver"))->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
+        $this->imageEntity = make(ImageManager::class, compact('driver'))->make($this->obtainResourcesFromRemoteURL($this->templateUrl));
     }
 
     /**
-     * getTemplateUrl
-     * @return string
+     * getTemplateUrl.
      */
     public function getTemplateUrl(): string
     {
@@ -54,8 +48,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
-     * setTemplateUrl
-     * @param string $templateUrl
+     * setTemplateUrl.
      */
     public function setTemplateUrl(string $templateUrl): void
     {
@@ -63,8 +56,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
-     * getRenderParameters
-     * @return array
+     * getRenderParameters.
      */
     public function getRenderParameters(): array
     {
@@ -72,8 +64,7 @@ class PageTemplate implements PageTemplateInterface
     }
 
     /**
-     * setRenderParameters
-     * @param array $renderParameters
+     * setRenderParameters.
      */
     public function setRenderParameters(array $renderParameters): void
     {
@@ -118,11 +109,10 @@ class PageTemplate implements PageTemplateInterface
     {
         $contextOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]];
 
-        if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
+        if (! $fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
             throw new InvalidPageUriException('failed to get remote resource');
         }
 
         return $fResource;
     }
-
 }

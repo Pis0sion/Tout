@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
@@ -58,12 +57,12 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
         $pageTemplates = [];
 
         foreach ($pageTemplateParameters as $page => $pageTemplateParameter) {
-            if (!array_key_exists('templateUrl', $pageTemplateParameter)
-                || !array_key_exists('renderParameters', $pageTemplateParameter)) {
+            if (! array_key_exists('templateUrl', $pageTemplateParameter)
+                || ! array_key_exists('renderParameters', $pageTemplateParameter)) {
                 throw new InvalidKeyValueException('invalid key-value pair');
             }
 
-            $pageTemplates[$page] = fn() => make(PageTemplateInterface::class, $pageTemplateParameter);
+            $pageTemplates[$page] = fn () => make(PageTemplateInterface::class, $pageTemplateParameter);
         }
 
         return parallel($pageTemplates);

@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace Pis0sion\Intervention;
 
 use Pis0sion\Intervention\Contract\ContractGeneratorFactoryInterface;
