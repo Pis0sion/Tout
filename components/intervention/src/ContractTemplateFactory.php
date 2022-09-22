@@ -54,20 +54,19 @@ class ContractTemplateFactory
      */
     public function renderContractTemplate(): array
     {
-        $handlerParallelFunc = $this->getPageTemplates()->map(fn(PageTemplateInterface $pageTemplate) =>
-        fn() => $this->render2PageTemplate($pageTemplate));
+        $handlerParallelFunc = $this->getPageTemplates()->map(fn(PageTemplateInterface $pageTemplate) => fn() => $this->render2PageTemplate($pageTemplate));
         return parallel($handlerParallelFunc::unwrap($handlerParallelFunc));
     }
 
     /**
      * render2PageTemplate.
      */
-    protected function render2PageTemplate(PageTemplateInterface $pageTemplate): array
+    protected function render2PageTemplate(PageTemplateInterface $pageTemplate): string
     {
         foreach ($pageTemplate->getRenderParameters() as $renderParameter) {
             $this->multiRenderPerPageTemplate($pageTemplate)($renderParameter);
         }
-
+        // set page name
         return $pageTemplate->save2Page();
     }
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention\Contract;
 
 
@@ -50,5 +51,5 @@ interface PageTemplateInterface
     /**
      * save2Page.
      */
-    public function save2Page();
+    public function save2Page(string $fileName): string;
 }

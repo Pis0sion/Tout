@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 use Intervention\Image\Image;
@@ -93,12 +94,23 @@ class PageTemplate implements PageTemplateInterface
      * override this method to implement different save rules.
      * @return string
      */
-    public function save2Page()
+    public function save2Page(string $fileName = ""): string
     {
-        $fileName = md5(uniqid() . microtime(true)) . '.jpg';
+        if ($fileName == "")
+            $fileName = $this->getDefaultFileName();
+
         // @notice code that blocks using io is prohibited
-        System::writeFile(BASE_PATH . '/runtime/' . $fileName, $this->imageEntity->encode()->getEncoded());
+        System::writeFile($fileName, $this->imageEntity->encode()->getEncoded());
         return $fileName;
+    }
+
+    /**
+     * getDefaultFileName
+     * @return string
+     */
+    protected function getDefaultFileName(): string
+    {
+        return md5(uniqid() . microtime(true)) . '.jpg';
     }
 
     /**
@@ -109,7 +121,7 @@ class PageTemplate implements PageTemplateInterface
     {
         $contextOptions = ['ssl' => ['verify_peer' => false, 'verify_peer_name' => false]];
 
-        if (! $fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
+        if (!$fResource = @file_get_contents($remoteUrl, false, stream_context_create($contextOptions))) {
             throw new InvalidPageUriException('failed to get remote resource');
         }
 
