@@ -9,6 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 namespace Pis0sion\Intervention;
 
 use Hyperf\Context\Context;
@@ -53,11 +54,8 @@ class ContractTemplateFactory
      */
     public function renderContractTemplate(): array
     {
-        $handlerParallelFunc = $this->getPageTemplates()->map(fn (PageTemplateInterface $pageTemplate) => function () use ($pageTemplate) {
-            $this->render2PageTemplate($pageTemplate);
-            return $pageTemplate->save2Page();
-        });
-
+        $handlerParallelFunc = $this->getPageTemplates()->map(fn(PageTemplateInterface $pageTemplate) =>
+        fn() => $this->render2PageTemplate($pageTemplate));
         return parallel($handlerParallelFunc::unwrap($handlerParallelFunc));
     }
 
@@ -66,7 +64,11 @@ class ContractTemplateFactory
      */
     protected function render2PageTemplate(PageTemplateInterface $pageTemplate): array
     {
-        return array_map($this->multiRenderPerPageTemplate($pageTemplate), $pageTemplate->getRenderParameters());
+        foreach ($pageTemplate->getRenderParameters() as $renderParameter) {
+            $this->multiRenderPerPageTemplate($pageTemplate)($renderParameter);
+        }
+
+        return $pageTemplate->save2Page();
     }
 
     /**
@@ -75,7 +77,7 @@ class ContractTemplateFactory
      */
     protected function multiRenderPerPageTemplate(PageTemplateInterface $pageTemplate)
     {
-        return fn ($renderParameter) => match ($renderParameter['type']) {
+        return fn($renderParameter) => match ($renderParameter['type']) {
             MimeType::TEXT_TYPE => $pageTemplate->inputText2PageTemplate($renderParameter),
             MimeType::IMAGE_TYPE => $pageTemplate->insertImageResource2PageTemplate($renderParameter),
             default => throw new InvalidMIMETypeException('invalid render type'),

@@ -11,11 +11,32 @@ declare(strict_types=1);
  */
 namespace Pis0sion\Intervention\Contract;
 
+
 /**
  * \Pis0sion\Intervention\Contract\PageTemplateInterface.
  */
 interface PageTemplateInterface
 {
+    /**
+     * setRenderParameters.
+     */
+    public function setRenderParameters(array $renderParameters): void;
+
+    /**
+     * getRenderParameters.
+     */
+    public function getRenderParameters(): array;
+
+    /**
+     * getTemplateUrl.
+     */
+    public function getTemplateUrl(): string;
+
+    /**
+     * setTemplateUrl.
+     */
+    public function setTemplateUrl(string $templateUrl): void;
+
     /**
      * inputText2PageTemplate.
      */
@@ -28,7 +49,6 @@ interface PageTemplateInterface
 
     /**
      * save2Page.
-     * @return mixed
      */
     public function save2Page();
 }

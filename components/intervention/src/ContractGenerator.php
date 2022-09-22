@@ -34,8 +34,9 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     }
 
     /**
-     * generatorContract.
-     * @param array $pageTemplates
+     * generatorContract
+     * @param array $pageTemplateParameters
+     * @return array
      */
     public function generatorContract(array $pageTemplateParameters): array
     {
@@ -49,7 +50,8 @@ class ContractGenerator implements ContractGeneratorFactoryInterface
     }
 
     /**
-     * build2PageTemplate.
+     * build2PageTemplate
+     * @param array $pageTemplateParameters
      * @return array
      */
     protected function build2PageTemplate(array $pageTemplateParameters)
